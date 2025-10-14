@@ -8,7 +8,7 @@ pros::Motor motor20(20, pros::E_MOTOR_GEARSET_18, false);
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 
 // Pneumatic solenoid on 3-wire port A
-pros::ADIDigitalOut solenoid('A');
+pros::adi::Pneumatics solenoid('A');
 
 // === MAIN CONTROL LOOP ===
 int main() {
