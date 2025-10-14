@@ -1,4 +1,5 @@
 #include "main.h"
+#include "pros/adi.hpp"
 
 // === Device Setup ===
 pros::Motor motor19(19, pros::E_MOTOR_GEARSET_18, false);
