@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "api.h"
@@ -6,7 +5,7 @@
 namespace subsystem {
 class Subsystem {
   public:
-    Subsystem(std::string name) : name(name) {};
+    Subsystem(std::string name = "") : name(name) {};
     virtual ~Subsystem() = default;
 
     void enable() {
@@ -20,19 +19,24 @@ class Subsystem {
         }
       }, this, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, name.c_str());
     }
-    void disable();
+    void disable() {
+      if (!is_enabled()) return;
+      pros::c::task_delete(task);
+      task = nullptr;
+      on_disable();
+    }
     bool is_enabled() const { return task != nullptr; }
 
   protected:
-    std::string name;
-    // Note: I fucking hate pros c++ tasks (flashbacks)
-    pros::task_t task;
+    const std::string name;
+    // Note: I fucking hate pros c++ api tasks (flashbacks)
+    pros::task_t task = nullptr;
 
     virtual const float get_delay() const { return 0.01; }
 
-    virtual void tick();
-    virtual void on_enable();
-    virtual void on_disable();
+    virtual void tick() {};
+    virtual void on_enable() {};
+    virtual void on_disable() {};
 };
 
 }

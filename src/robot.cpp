@@ -2,7 +2,6 @@
 #include "lemlib/chassis/chassis.hpp"
 #include "pros/abstract_motor.hpp"
 
-#include "fmt/core.h"
 #include <vector>
 
 // Controller setup
@@ -63,5 +62,4 @@ lemlib::Chassis robot::chassis(
   robot::odom);
 
 void robot::init() {
-  fmt::print("Initializing chassis...\n");
 }
