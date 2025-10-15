@@ -1,15 +1,13 @@
 /**
  * @file chassis.h
  * @brief Declarations for the robot chassis subsystem.
+ * @author Lena
+ * @date 2025-10-14
  *
- * This header declares the chassis-related global objects used across the
+ * This header declares the robot-related global objects used across the
  * project: controller, motor groups, IMU/encoder sensors, tracking wheels,
  * odometry helpers, controller tuning structures, and the high level chassis
- * object. All symbols are declared `extern` here and defined/initialized in
- * the corresponding implementation file (typically `src/chassis.cpp`).
- *
- * Documentation style: Doxygen-compatible comments are used so these symbols
- * can be extracted into generated docs.
+ * object.
  */
 
 #pragma once
@@ -26,7 +24,7 @@ namespace robot {
  *
  * This object represents the master human interface (joysticks, buttons).
  * It is intentionally non-const because it maintains runtime state such as
- * button debounce information and event history.
+ * button information and joystick state.
  *
  * Usage: read joystick axes and button states from this object in
  * operator-control code. The controller instance is created/initialized in
