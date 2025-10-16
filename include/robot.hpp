@@ -1,6 +1,6 @@
 /**
- * @file chassis.h
- * @brief Declarations for the robot chassis subsystem.
+ * @file robot.hpp
+ * @brief Declarations for global robot objects.
  * @author Lena
  * @date 2025-10-14
  *
@@ -114,6 +114,20 @@ extern lemlib::ControllerSettings vertical_controller;
  * used by the angular/heading controller.
  */
 extern lemlib::ControllerSettings angular_controller;
+
+
+/**
+ * @brief Exponential throttle response curve for drive control.
+ *
+ * A globally declared lemlib::ExpoDriveCurve instance that maps raw throttle or joystick
+ * input into motor command output using an exponential response. The curve provides
+ * increased resolution and smoother control around the center (low inputs) while still
+ * allowing full power at the extremes.
+ *
+ * See also: implementation file for exact parameter defaults and any convenience methods
+ * provided by lemlib::ExpoDriveCurve to compute output from input values.
+ */
+extern lemlib::ExpoDriveCurve throttle_curve, steer_curve;
 
 /**
  * @brief High-level chassis object that exposes drive/trajectory APIs.
