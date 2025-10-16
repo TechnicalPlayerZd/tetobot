@@ -1,0 +1,105 @@
+#include "robot.hpp"
+#include "lemlib/chassis/chassis.hpp"
+#include "pros/abstract_motor.hpp"
+
+#include <vector>
+
+// Controller setup
+pros::Controller robot::master(pros::E_CONTROLLER_MASTER);
+
+// Motor group setup
+pros::MotorGroup robot::left({1, 2, 3}, 
+  pros::v5::MotorGears::blue, pros::v5::MotorEncoderUnits::degrees);
+pros::MotorGroup robot::right({4, 5, 6}, 
+  pros::v5::MotorGears::blue, pros::v5::MotorEncoderUnits::degrees);
+
+// Drivetrain
+lemlib::Drivetrain robot::drivetrain(
+  &robot::left, &robot::right, 
+  10.0,
+  3.25,
+  450,
+  2);
+
+// IMU and encoder setup
+pros::IMU robot::imu(7);
+pros::Rotation robot::vertical_encoder(8);
+pros::Rotation robot::lateral_encoder(9);
+
+// Odom wheel configs
+lemlib::TrackingWheel robot::vertical_wheel(
+  &robot::vertical_encoder, 2.75, 1.0, 1.0);
+lemlib::TrackingWheel robot::lateral_wheel(
+  &robot::lateral_encoder, 2.75, 1.0, 1.0);
+
+// Odometry configuration
+lemlib::OdomSensors robot::odom(
+  &robot::vertical_wheel, nullptr, 
+  &robot::lateral_wheel, nullptr, 
+  &robot::imu);
+
+// PID controllers
+lemlib::ControllerSettings robot::vertical_controller(
+  100, 0.0, 0.1,
+  0.0,
+  0.75, 0.5,
+  1.5, 0.5,
+  50
+);
+
+lemlib::ControllerSettings robot::angular_controller(
+  100, 0.0, 0.1,
+  0.0,
+  2, 0.5,
+  5, 0.5,
+  50
+);
+
+// Drive curves
+lemlib::ExpoDriveCurve robot::throttle_curve(3, 0.0, 0.7);
+lemlib::ExpoDriveCurve robot::steer_curve(5, 0.0, 0.7);
+
+// Chassis definition
+lemlib::Chassis robot::chassis(
+  robot::drivetrain, 
+  robot::vertical_controller, 
+  robot::angular_controller, 
+  robot::odom,
+  &robot::throttle_curve,
+  &robot::steer_curve);
+
+constexpr std::string_view TETO = 
+  "...................++**.......:........... \
+..................++.........:::.......... \
+...................#.......:.::::......... \
+................:**%%#*#**..::::::........ \
+..............***+*++++++++++-::-*++*+:... \
+...+++*##**#**++**++++*+++++++@%%#**::-... \
+....**##%%%@+++**+*++++***++++*@%%#*#:.... \
+....+*##%%@*++*##*#*+*+%#**++++#@%%#+::... \
+.....*#%@@@*+###%*##*#+*%#*#****#%%#**.... \
+.....*##%%@**###*=#%###-%+##*#**.@%%*+:... \
+.....*#%@@%*###@=@=%###:#%%+####.@%#%*.... \
+......#%%%+##%%%%%%===##*#+#%##...%%#..... \
+......:#%%...##=------------**.....%...... \
+..............##=----------=*............. \
+...............=#.#=----.#.:.............. \
+..............%*%-#++=@+=#+............... \
+............=+@@%-:-+++=##**.............. \
+................*+++======*==............. \
+.................=++=+:-=..#%=............ \
+................*==*==++=*%.:#*%.......... \
+..............**=*##**+*****..:-::........ \
+.............%*#**+****++@%@@............. \
+................%@@%%%@==-%............... \
+................----...---................ \
+.................---...---:............... \
+.................#%-....%--............... \
+.................@@@.....+%#.............. \
+.................#@%.....@@...............";
+
+void robot::init() {
+  std::cout << TETO << std::endl;
+  chassis.calibrate();
+  std::cout << "Chassis calibrated" << std::endl;
+}
